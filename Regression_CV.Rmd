@@ -1,0 +1,66 @@
+---
+title: "Regression with Categorical Variables"
+author: "Mark Angelo Tugade"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(car)
+```
+
+```{r}
+# Load the data
+data("Salaries", package = "car")
+# Inspect the data
+sample_n(Salaries, 3)
+```
+
+```{r}
+# Compute the model
+model <- lm(salary ~ sex, data = Salaries)
+summary(model)$coef %>%
+  round(digits = 2)
+```
+
+# changing female as the baseline to male
+```{r}
+Salaries <- Salaries %>%
+  mutate(sex = relevel(sex, ref = "Male"))
+```
+
+```{r}
+model <- lm(salary ~ sex, data = Salaries)
+summary(model)$coef
+```
+
+```{r}
+contrasts(Salaries$sex)
+```
+
+```{r}
+model2 <- lm(salary ~ yrs.service + rank + discipline + sex,
+             data = Salaries)
+Anova(model2)
+```
+
+```{r}
+summary(model2) $coef %>%
+  round(digits = 2)
+```
+
+```{r}
+model3 <- lm(salary ~  rank + discipline,
+             data = Salaries)
+Anova(model3)
+```
+
+```{r}
+summary(model3) $coef %>%
+  round(digits = 2)
+```
+
+```{r}
+summary(model3)
+```
+
